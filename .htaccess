@@ -3,3 +3,5 @@ RewriteEngine On
 RewriteRule ^test?$ test.php
 
 RewriteRule ^tests/([0-9])([a-z]) test.php?id=$1$2
+
+RewriteRule ^profile/([a-zA-Z0-9._-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,3})$ profile.php?uid=$1
