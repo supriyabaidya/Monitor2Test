@@ -1,22 +1,25 @@
 <?php
-$session_name = "SERVICE-SESSID";
-$session_id = "LOGIN";
-session_name($session_name);
-session_id($session_id);
 session_start();
 
 /*
  * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template file, choose Tools | Templatess
  * and open the template in the editor.
  */
 
 if (isset($_POST['submit_logout'])) {
+    setcookie('username', $_SESSION['username'], time() - 3600, '/');
+    unset($_COOKIE['username']);
     session_destroy();
+
     header('location:../index');
 }
-$username = $_SESSION['username'];
-echo 'welcome ' . $username;
+
+if (isset($_SESSION['username']) && $_SESSION['username'] === $_SERVER['QUERY_STRING']) {       // if session is set && session value and QUERY_STRING are same then show user profile
+    echo 'Welcome ' . $_SESSION['username'] . ' ,';
+} else {    // else redirect to `index.php`
+    header('location:../index');
+}
 ?>
 
 <!DOCTYPE html>

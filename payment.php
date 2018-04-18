@@ -1,8 +1,4 @@
 <?php
-$session_name = "SERVICE-SESSID";
-$session_id = "LOGIN";
-session_name($session_name);
-session_id($session_id);
 session_start();
 
 /*
@@ -17,14 +13,15 @@ if (isset($_POST['stripeToken'])) {        //register(insert into db) after paym
     mysqli_query($link, "insert into service_users(username,password,name,phone) values('" . $_SESSION['username'] . "','" . $_SESSION['password'] . "','" . $_SESSION['name'] . "','" . $_SESSION['phone'] . "') ;") or die("\'insert\' query execution is failed!! ");
     mysqli_close($link);
 
+    /* the credentials are deleted from session */
     unset($_SESSION['name']);
     unset($_SESSION['username']);
     unset($_SESSION['password']);
     unset($_SESSION['phone']);
 
-    $_SESSION['message'] = 'Registration(payment) is succeeded , now login please';
+    $_SESSION['message'] = 'Registration(payment) is succeeded , now login please';     //setting $_SESSION['message']` , which will be shown in `index.php`
 
-    header('location:index');
+    header('location:index');       //then redirect to `index.php` for log in or register etc
 }
 ?>
 

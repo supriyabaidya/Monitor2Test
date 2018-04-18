@@ -1,18 +1,15 @@
 <?php
-$session_name = "SERVICE-SESSID";
-$session_id = "LOGIN";
-session_name($session_name);
-session_id($session_id);
 session_start();
 
-if (isset($_POST['submit_register'])) {
+if (isset($_POST['submit_register'])) {         // user registered using credentials
 
+    /* the credentials are stored in session */
     $_SESSION['name'] = $_POST['name'];
     $_SESSION['username'] = $_POST['username'];
     $_SESSION['password'] = $_POST['password'];
     $_SESSION['phone'] = $_POST['phone'];
 
-    header('location:payment');
+    header('location:payment');     // then redirecting to `payment.php` page
 }
 ?>
 
@@ -48,7 +45,9 @@ Phone no.  : <input type="number" name="phone" placeholder="phone no." /></br>
         }
         function validate_username(username) {
 
-            var regExpString = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/g;
+//            var regExpString = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/g;
+//            var regExpString = /^[a-zA-Z0-9\.]+$/g;
+            var regExpString = /^((.)+)$/g;
 
             if (regExpString.test(username)) {
                 document.getElementById("username_error").innerHTML = "";
