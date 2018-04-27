@@ -9,6 +9,31 @@ session_start();
 
 if (isset($_SESSION['username']) && $_SESSION['username'] === $_SERVER['QUERY_STRING']) {       // if session is set && session value and QUERY_STRING are same then show user profile
     echo 'Welcome ' . $_SESSION['username'] . ' ,</br>';
+
+    ini_set("soap.wsdl_cache_enabled", "0");
+    $client = new SoapClient("http://web-service-android-sensor-web-service.1d35.starter-us-east-1.openshiftapps.com/Test?wsdl"); // soap webservice call
+
+    $functions = $client->__getFunctions();
+    $types = $client->__getTypes();
+
+//$response1 = $client->__soapCall('twoDimesionArray', array('parameters' => array('name' => 'Test __soapCall')));
+    $response = $client->hello(array('name' => 'Test hello(finally from netbeans).'));
+
+    $response2dArray1 = $client->twoDimesionArray(array('username' => $_SESSION['username'].'_1', 'array' => array(array('12', '34'), array('56', '78'))));
+    $response2dArray2 = $client->twoDimesionArray(array('username' => $_SESSION['username'].'_2', 'array' => array(array('12', '34'), array('56', '78'))));
+
+    echo '</br>response</br>';
+
+    var_dump($functions);
+
+    var_dump($types);
+
+    var_dump($response);
+
+    var_dump($response2dArray1);
+    var_dump($response2dArray2);
+
+    exit();
 } else {    // else redirect to `index.php`
     header('location:../index');
 }
@@ -141,16 +166,16 @@ if (isset($_POST['submit_logout'])) {
 //                }.bind(marker));
 
                 google.maps.event.addListener(marker, 'click', function () {
-                    var pos = map.getZoom();
-                    map.setZoom(18);
-                    map.setCenter(marker.getPosition());
+//                    var pos = map.getZoom();
+                    map.setZoom(25);
+                    map.setCenter(this.getPosition());
 //                    window.setTimeout(function () {
 //                        map.setZoom(pos);
 //                    }, 3000);
                 });
 
-                bounds.extend(marker.position);
-                map.fitBounds(bounds);
+//                bounds.extend(marker.position);
+//                map.fitBounds(bounds);
 
                 //     google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
                 //     	  if (this.getZoom() < 15) {
@@ -304,9 +329,10 @@ if (isset($_POST['submit_logout'])) {
 
                 if (noOfCheckedItems === 0 && !isMouseOnMap) {
                     jQuery.ajax({
-                        type: "GET",
+                        type: "POST",
                         url: "../call_webservice_and_load_data.php",
                         dataType: "json",
+                        data: {no_of_sensors: JSON.stringify(sensorsArray.length), no_of_targets: JSON.stringify(targetsArray.length)},
                         success: function (response) {
                             clearAllSensors();
 

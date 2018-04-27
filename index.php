@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+//header('location:test');
+
 include './database.php';
 
 if (isset($_POST['submit_login'])) {    // when user logged in

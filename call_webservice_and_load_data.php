@@ -5,9 +5,14 @@ $client = new SoapClient("http://web-service-android-sensor-web-service.1d35.sta
 
 $response = $client->getUsers();
 
+$no_of_sensors = $_POST['no_of_sensors'];
+$no_of_targets = $_POST['no_of_targets'];
+
 $form = '<div class="dataset">
-		<h1 class="title">List of Users</h1>
-			<form action="sendNotification.php" method="POST">
+		<h1 class="title"> List of Users </h1>
+			<form action="../sendNotification.php" method="POST">
+                <input type="hidden" name="no_of_sensors" value="' . $no_of_sensors . '" />
+                <input type="hidden" name="no_of_targets" value="' . $no_of_targets . '" />
 				<table>
 					<tr><th>select</th><th>username</th><th>longitude</th><th>latitude</th><th>status</th><th>proximity</th><th>light</th></tr>';
 
