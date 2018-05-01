@@ -18,7 +18,7 @@ if (isset($_SESSION['username']) && $_SESSION['username'] === $_SERVER['QUERY_ST
     $functions = $client->__getFunctions();
     $types = $client->__getTypes();
 
-    $matrix = array(array('i', 'j', 'S'), array('1', '1', '1'), array('1', '2', '0'), array('2', '1', '1'), array('2', '2', '0'), array('3', '1', '0'), array('3', '2', '1'));
+    $matrix = array(array('i', 'j', 'S'), array('1', '1', '1'), array('1', '2', '0'), array('2', '1', '0'), array('2', '2', '0'), array('3', '1', '0'), array('3', '2', '1'));
     $mainComputations1 = $client->mainComputations(array('service_usersUsername' => $_SESSION['username'] . '_1', 'noOfSensors' => '3', 'noOfTargets' => '2', 'matrix' => $matrix));
     $mainComputations2 = $client->mainComputations(array('service_usersUsername' => $_SESSION['username'] . '_2', 'noOfSensors' => '3', 'noOfTargets' => '2', 'matrix' => $matrix));
 //$response1 = $client->__soapCall('twoDimesionArray', array('parameters' => array('name' => 'Test __soapCall')));
@@ -27,6 +27,8 @@ if (isset($_SESSION['username']) && $_SESSION['username'] === $_SERVER['QUERY_ST
 //    $response2dArray1 = $client->twoDimesionArray(array('username' => $_SESSION['username'].'_1', 'array' => array(array('12', '34'), array('56', '78'))));
 //    $response2dArray2 = $client->twoDimesionArray(array('username' => $_SESSION['username'].'_2', 'array' => array(array('12', '34'), array('56', '78'))));
 //    $clearOutput = $client->clearOutput(array('service_usersUsername' => $_SESSION['username'].'_1'));
+//    $showOutput = $client->showOutput(array('service_usersUsername' => $_SESSION['username'] . '_1'));
+//    $error = 'Error: ';
 
     echo '</br>response</br>';
     $clear_output_form = '<form action="../clear_output" method="post" >
@@ -39,16 +41,59 @@ if (isset($_SESSION['username']) && $_SESSION['username'] === $_SERVER['QUERY_ST
 
     var_dump($types);
 
+//    $error = '';
+//    $output = '<table>
+//				<tr><th>Sensor Id</th><th>proximity</th><th>light</th><th>Time</th></tr></br>';
+//    var_dump($showOutput);
+//
+//    foreach ($showOutput as $row) {
+////        echo '$row ' . sizeof($row) . '</br>';
+//
+//        foreach ($row as $object) {
+////            echo '$object ' . sizeof($object) . '</br>';
+//
+//            if (sizeof($row) === 1 && sizeof($object) === 1) {         // for cacthing error,which is only one string value in 2d array
+//                $error = $error . $row->item;
+//            } elseif (sizeof($row) === 1 && sizeof($object) === 4) {        // if there is only one row in the generated temp_output file
+//                $output = $output . '<tr><th>' . $object[0] . '</th><th>' . $object[1] . '</th><th>' . $object[2] . '</th><th>' . $object[3] . '</th></tr></br>';
+//            } else {
+//                foreach ($object as $value) {
+////                    echo '$value ' . sizeof($value) . '</br>';
+//
+//                    $output = $output . '<tr><th>' . $value[0] . '</th><th>' . $value[1] . '</th><th>' . $value[2] . '</th><th>' . $value[3] . '</th></tr></br>';
+//                }
+//            }
+//        }
+//    }
+//    
+//    $output = $output . '</table></br>';
+//
+//    echo $output;
+//    echo $error;
 //    var_dump($response1);
 //    var_dump($response2);
 //
 //    var_dump($response2dArray1);
 //    var_dump($response2dArray2);
-//    var_dump($mainComputations1);
-//    var_dump($mainComputations2);
+    var_dump($mainComputations1);
+    var_dump($mainComputations2);
 //    var_dump($clearOutput);
-
-    exit();
+//    var_dump($showOutput);
+//    foreach ($showOutput as $key1 => $object1) {
+//        echo '</br>key1 ' . $key1;
+//
+//        foreach ($object1 as $row) {
+//
+//            foreach ($row as $key2 => $object2) {
+//                echo '</br>key2 ' . $key2;
+//
+//                foreach ($object2 as $value) {
+//                    echo $value;
+//                }
+//            }
+//        }
+//    }
+//    exit();
 } else {    // else redirect to `index.php`
     header('location:../index');
 }
@@ -351,7 +396,9 @@ if (isset($_POST['submit_logout'])) {
                         success: function (response) {
                             clearAllSensors();
 
-                            document.getElementById("output").innerHTML = response.html;
+                            document.getElementById("sensors").innerHTML = response.sensors;
+                            document.getElementById("output").innerHTML = response.output;
+                            document.getElementById("exception").innerHTML = response.exception;
                             document.getElementById("time").innerHTML = "time : " + new Date();
                             $.each(response.places, function (i, item) {
                                 if (item.status === 'Online') {
@@ -385,7 +432,7 @@ if (isset($_POST['submit_logout'])) {
             <input type="submit" name="submit_logout" value="logout"/>
         </form>
 
-        <div id='output'></div><div id='CoverageR' ></div><br/>
+        <div id='sensors'></div><div id='output'></div><div id='exception'></div><div id='CoverageR' ></div><br/>
         <div id='time'></div>
         <div id='map' onmouseover='(function () {
                     document.getElementById("mouse").innerHTML = "onmouseenter ";
