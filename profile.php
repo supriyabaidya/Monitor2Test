@@ -11,27 +11,42 @@ if (isset($_SESSION['username']) && $_SESSION['username'] === $_SERVER['QUERY_ST
     echo 'Welcome ' . $_SESSION['username'] . ' ,</br>';
 
     ini_set("soap.wsdl_cache_enabled", "0");
-    $client = new SoapClient("http://web-service-android-sensor-web-service.1d35.starter-us-east-1.openshiftapps.com/Test?wsdl"); // soap webservice call
+
+    $client = new SoapClient("http://localhost:8081/WebserviceTestOpenshift/Test?wsdl"); // soap webservice call
+//    $client = new SoapClient("http://web-service-android-sensor-web-service.1d35.starter-us-east-1.openshiftapps.com/Test?wsdl"); // soap webservice call
 
     $functions = $client->__getFunctions();
     $types = $client->__getTypes();
 
+    $matrix = array(array('i', 'j', 'S'), array('1', '1', '1'), array('1', '2', '0'), array('2', '1', '1'), array('2', '2', '0'), array('3', '1', '0'), array('3', '2', '1'));
+    $mainComputations1 = $client->mainComputations(array('service_usersUsername' => $_SESSION['username'] . '_1', 'noOfSensors' => '3', 'noOfTargets' => '2', 'matrix' => $matrix));
+    $mainComputations2 = $client->mainComputations(array('service_usersUsername' => $_SESSION['username'] . '_2', 'noOfSensors' => '3', 'noOfTargets' => '2', 'matrix' => $matrix));
 //$response1 = $client->__soapCall('twoDimesionArray', array('parameters' => array('name' => 'Test __soapCall')));
-    $response = $client->hello(array('name' => 'Test hello(finally from netbeans).'));
-
-    $response2dArray1 = $client->twoDimesionArray(array('username' => $_SESSION['username'].'_1', 'array' => array(array('12', '34'), array('56', '78'))));
-    $response2dArray2 = $client->twoDimesionArray(array('username' => $_SESSION['username'].'_2', 'array' => array(array('12', '34'), array('56', '78'))));
+//    $response1 = $client->hello(array('name' => 'Test hello (finally from netbeans).'));
+//    $response2 = $client->hello(array('name' => 'Test hello (finally from netbeans).'));
+//    $response2dArray1 = $client->twoDimesionArray(array('username' => $_SESSION['username'].'_1', 'array' => array(array('12', '34'), array('56', '78'))));
+//    $response2dArray2 = $client->twoDimesionArray(array('username' => $_SESSION['username'].'_2', 'array' => array(array('12', '34'), array('56', '78'))));
+//    $clearOutput = $client->clearOutput(array('service_usersUsername' => $_SESSION['username'].'_1'));
 
     echo '</br>response</br>';
+    $clear_output_form = '<form action="../clear_output" method="post" >
+            <input type="submit" name="submit_clear_output" value="clear output"/>
+        </form>';
+
+    echo $clear_output_form;
 
     var_dump($functions);
 
     var_dump($types);
 
-    var_dump($response);
-
-    var_dump($response2dArray1);
-    var_dump($response2dArray2);
+//    var_dump($response1);
+//    var_dump($response2);
+//
+//    var_dump($response2dArray1);
+//    var_dump($response2dArray2);
+//    var_dump($mainComputations1);
+//    var_dump($mainComputations2);
+//    var_dump($clearOutput);
 
     exit();
 } else {    // else redirect to `index.php`
