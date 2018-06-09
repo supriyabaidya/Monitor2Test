@@ -10,92 +10,20 @@ session_start();
 if (isset($_SESSION['username']) && $_SESSION['username'] === $_SERVER['QUERY_STRING']) {       // if session is set && session value and QUERY_STRING are same then show user profile
     echo 'Welcome ' . $_SESSION['username'] . ' ,</br>';
 
-    ini_set("soap.wsdl_cache_enabled", "0");
-
-    $client = new SoapClient("http://localhost:8081/WebserviceTestOpenshift/Test?wsdl"); // soap webservice call
-//    $client = new SoapClient("http://web-service-android-sensor-web-service.1d35.starter-us-east-1.openshiftapps.com/Test?wsdl"); // soap webservice call
-
-    $functions = $client->__getFunctions();
-    $types = $client->__getTypes();
-
-    $matrix = array(array('i', 'j', 'S'), array('1', '1', '1'), array('1', '2', '0'), array('2', '1', '0'), array('2', '2', '0'), array('3', '1', '0'), array('3', '2', '1'));
-    $mainComputations1 = $client->mainComputations(array('service_usersUsername' => $_SESSION['username'] . '_1', 'noOfSensors' => '3', 'noOfTargets' => '2', 'matrix' => $matrix));
-    $mainComputations2 = $client->mainComputations(array('service_usersUsername' => $_SESSION['username'] . '_2', 'noOfSensors' => '3', 'noOfTargets' => '2', 'matrix' => $matrix));
-//$response1 = $client->__soapCall('twoDimesionArray', array('parameters' => array('name' => 'Test __soapCall')));
-//    $response1 = $client->hello(array('name' => 'Test hello (finally from netbeans).'));
-//    $response2 = $client->hello(array('name' => 'Test hello (finally from netbeans).'));
-//    $response2dArray1 = $client->twoDimesionArray(array('username' => $_SESSION['username'].'_1', 'array' => array(array('12', '34'), array('56', '78'))));
-//    $response2dArray2 = $client->twoDimesionArray(array('username' => $_SESSION['username'].'_2', 'array' => array(array('12', '34'), array('56', '78'))));
-//    $clearOutput = $client->clearOutput(array('service_usersUsername' => $_SESSION['username'].'_1'));
-//    $showOutput = $client->showOutput(array('service_usersUsername' => $_SESSION['username'] . '_1'));
-//    $error = 'Error: ';
-
-    echo '</br>response</br>';
-    $clear_output_form = '<form action="../clear_output" method="post" >
-            <input type="submit" name="submit_clear_output" value="clear output"/>
-        </form>';
-
-    echo $clear_output_form;
-
-    var_dump($functions);
-
-    var_dump($types);
-
-//    $error = '';
-//    $output = '<table>
-//				<tr><th>Sensor Id</th><th>proximity</th><th>light</th><th>Time</th></tr></br>';
-//    var_dump($showOutput);
-//
-//    foreach ($showOutput as $row) {
-////        echo '$row ' . sizeof($row) . '</br>';
-//
-//        foreach ($row as $object) {
-////            echo '$object ' . sizeof($object) . '</br>';
-//
-//            if (sizeof($row) === 1 && sizeof($object) === 1) {         // for cacthing error,which is only one string value in 2d array
-//                $error = $error . $row->item;
-//            } elseif (sizeof($row) === 1 && sizeof($object) === 4) {        // if there is only one row in the generated temp_output file
-//                $output = $output . '<tr><th>' . $object[0] . '</th><th>' . $object[1] . '</th><th>' . $object[2] . '</th><th>' . $object[3] . '</th></tr></br>';
-//            } else {
-//                foreach ($object as $value) {
-////                    echo '$value ' . sizeof($value) . '</br>';
-//
-//                    $output = $output . '<tr><th>' . $value[0] . '</th><th>' . $value[1] . '</th><th>' . $value[2] . '</th><th>' . $value[3] . '</th></tr></br>';
-//                }
-//            }
-//        }
-//    }
-//    
-//    $output = $output . '</table></br>';
-//
-//    echo $output;
-//    echo $error;
+//    ini_set("soap.wsdl_cache_enabled", "0");
+////    $client = new SoapClient("http://web-service-target-coverage.7e14.starter-us-west-2.openshiftapps.com/Test?wsdl");
+    $client = new SoapClient("http://sensor-target-coverage.ap-south-1.elasticbeanstalk.com/Test?wsdl");
+//    $response1 = $client->hello(array('name' => 'Test hello'));
+//////    
+//    $fn=$client->__getFunctions();
+//    var_dump($fn);
+    $response2 = $client->databaseCheck(array('name' => 'DatabaseCheck : '));
 //    var_dump($response1);
-//    var_dump($response2);
-//
-//    var_dump($response2dArray1);
-//    var_dump($response2dArray2);
-    var_dump($mainComputations1);
-    var_dump($mainComputations2);
-//    var_dump($clearOutput);
-//    var_dump($showOutput);
-//    foreach ($showOutput as $key1 => $object1) {
-//        echo '</br>key1 ' . $key1;
-//
-//        foreach ($object1 as $row) {
-//
-//            foreach ($row as $key2 => $object2) {
-//                echo '</br>key2 ' . $key2;
-//
-//                foreach ($object2 as $value) {
-//                    echo $value;
-//                }
-//            }
-//        }
-//    }
+    var_dump($response2);
+
 //    exit();
-} else {    // else redirect to `index.php`
-    header('location:../index');
+} else {    // else redirect to `final_sem_project.php`
+    header('location:../final_sem_project.php');
 }
 
 if (isset($_POST['submit_logout'])) {
@@ -103,7 +31,7 @@ if (isset($_POST['submit_logout'])) {
     unset($_COOKIE['username']);
     session_destroy();
 
-    header('location:../index');
+    header('location:../final_sem_project.php');
 }
 ?>
 
@@ -140,28 +68,15 @@ if (isset($_POST['submit_logout'])) {
 
         <script type="text/javascript">
 
-//            var items = [
-//                [1, 2],
-//                [3, 4],
-//                [5, '6']
-//            ];
-//            
-//            console.log(items);
-//            var p1 = new google.maps.LatLng(22.575597, 88.351059);
-//            var p2 = new google.maps.LatLng(22.577229, 88.277507);
-
-
             function calculateDistance(p1, p2) {
                 return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2)).toFixed(2);
             }
-
-//            console.log('dist ' + calculateDistance(p1, p2));
 
             var isMouseOnMap = false;
 
             var interval = 5000;
 
-            var map, marker, latlng, bounds, infowin;
+            var map, marker, circle, latlng, bounds, infowin;
 
             /* initial locations for map */
             var _lat = 22.57722797;
@@ -181,21 +96,23 @@ if (isset($_POST['submit_logout'])) {
 
                 /* add click listener to the map */
                 google.maps.event.addListener(map, 'click', function (event) {
-                    addMarker('target', event.latLng.lat().toFixed(6), event.latLng.lng().toFixed(6), 'T' + targetIndex + ' ; latitude: ' + event.latLng.lat().toFixed(6) + ' , longitude: ' + event.latLng.lng().toFixed(6), "../red-dot.png");
+                    addMarker('target', event.latLng.lat().toFixed(6), event.latLng.lng().toFixed(6), 'T' + targetIndex + ' =>latitude: ' + event.latLng.lat().toFixed(6) + ' , longitude: ' + event.latLng.lng().toFixed(6), null, "../red-dot.png");
                 });
             }
 
-            var sensorRadius = 10;
-            var targetIndex = 0;
+            var sensorRadius = 1.0;
+            var targetIndex = 1;
             var sensorsArray = [];
             var sensorsLocationArray = [];
             var targetsArray = [];
             var targetsLocationArray = [];
 
+            var circleArray = [];
+
             var matrix;
             var matrixIndex;
 
-            function addMarker(type, lat, lng, title, icon) {
+            function addMarker(type, lat, lng, title, status, icon, circleNeeded = false) {
 
 //                console.log(parseFloat(lng)+' , '+lng);
                 marker = new google.maps.Marker({/* Cast the returned data as floats using parseFloat() */
@@ -217,40 +134,52 @@ if (isset($_POST['submit_logout'])) {
                     targetIndex++;
                 }
 
-//                markersArray.push(marker);
-
-//                google.maps.event.addListener(marker, 'click', function (event) {
-//                    infowin.setContent(this.title);
-//                    infowin.open(map, this);
-//                    infowin.setPosition(this.position);
-//                }.bind(marker));
-
                 google.maps.event.addListener(marker, 'click', function () {
-//                    var pos = map.getZoom();
                     map.setZoom(25);
                     map.setCenter(this.getPosition());
-//                    window.setTimeout(function () {
-//                        map.setZoom(pos);
-//                    }, 3000);
                 });
 
-//                bounds.extend(marker.position);
-//                map.fitBounds(bounds);
+                if (circleNeeded === true) {
+                    var color = "";
+                    if (status === 'Online') {
+                        color = "green";
+                    } else if (status === 'Offline') {
+                        color = "red";
+                    }
 
-                //     google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
-                //     	  if (this.getZoom() < 15) {
-                //     	    this.setZoom(20);
-                //     	  }
-                //     	});
+                    circle = new google.maps.Circle({
+                        map: map,
+                        radius: sensorRadius, // radius in meter 
+                        strokeColor: color,
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: color
+                    });
+
+                    circle.bindTo('center', marker, 'position');
+
+                    google.maps.event.addListener(circle, 'click', function (event) {       // to make the cicle clickable too,i.e, for getting target in map as well as in the circles too
+                        addMarker('target', event.latLng.lat().toFixed(6), event.latLng.lng().toFixed(6), 'T' + targetIndex + ' =>latitude: ' + event.latLng.lat().toFixed(6) + ' , longitude: ' + event.latLng.lng().toFixed(6), null, "../red-dot.png");
+                    });
+
+                    circleArray.push(circle);
+                }
+
+                if (type === 'target') {
+                    showCoverageR();
+                }
             }
 
             function clearAllSensors() {
                 var length = sensorsArray.length;
                 for (var i = 0; i < length; i++) {
                     sensorsArray[i].setMap(null);
+                    circleArray[i].setMap(null);
                 }
                 sensorsArray.length = 0;
                 sensorsLocationArray.length = 0;
+
+                circleArray.length = 0
             }
 
             function clearAllTargets() {
@@ -262,6 +191,8 @@ if (isset($_POST['submit_logout'])) {
                 targetsLocationArray.length = 0;
 
                 targetIndex = 0;
+
+                showCoverageR(); // to refresh the CoverageR table after clearAllTargets
             }
 
             function showAllSensors() {
@@ -272,7 +203,6 @@ if (isset($_POST['submit_logout'])) {
                     sensors += 'lat : ' + sensorsLocationArray[i].lat + ' long : ' + sensorsLocationArray[i].lng + '\n';
                 }
                 console.log(sensors);
-//                document.getElementById('error').innerHTML = sensors;
             }
 
             function showAllTargets() {
@@ -283,13 +213,12 @@ if (isset($_POST['submit_logout'])) {
                     targets += 'lat : ' + targetsLocationArray[i].lat + ' long : ' + targetsLocationArray[i].lng + '\n';
                 }
                 console.log(targets);
-//                document.getElementById('targets').innerHTML = targets;
             }
 
 
             function showCoverageR() {
                 matrix = [];
-                matrixIndex = 0;
+                matrixIndex = -1;
                 var rows = sensorsLocationArray.length;
                 var columns = targetsLocationArray.length;
                 var i = 0, j = 0;
@@ -297,31 +226,20 @@ if (isset($_POST['submit_logout'])) {
                 table += '<table>\n';
                 table += '<tr>';
                 table += '<th><pre>\tTargets<br/>Sensors</pre></th>';
-                matrix[matrixIndex] = [];
-//                matrix[matrixIndex].push('Sensors\\Targets');
-                matrix[matrixIndex].push('i');
-                matrix[matrixIndex].push('j');
-                matrix[matrixIndex].push('S');
-//                matrix[matrixIndexI][matrixIndexJ] = '<pre>\tTargets<br/>Sensors</pre>';
-//                matrixIndexJ++;
                 for (i = 0; i < columns; i++) {
-                    table += '<th>T' + i + '</th>';
-//                    matrix[matrixIndex].push('T' + i);
+                    table += '<th>T' + (i + 1) + '</th>';
                 }
                 table += '</tr>\n';
 
                 for (i = 0; i < rows; i++) {
-//                    matrixIndex++;
-////                    matrixIndexJ = 0;
-//                    matrix[matrixIndex] = [];
+
                     var eachSensorLocation = new google.maps.LatLng(sensorsLocationArray[i].lat, sensorsLocationArray[i].lng);
                     table += '<tr><td>' + sensorsLocationArray[i].name + '</td>';
-//                    matrix[matrixIndex].push(sensorsLocationArray[i].name);
                     for (j = 0; j < columns; j++) {
                         matrixIndex++;
                         matrix[matrixIndex] = [];
-                        matrix[matrixIndex].push(i);
-                        matrix[matrixIndex].push(j);
+                        matrix[matrixIndex].push(i + 1);
+                        matrix[matrixIndex].push(j + 1);
                         var eachTargetLocation = new google.maps.LatLng(targetsLocationArray[j].lat, targetsLocationArray[j].lng);
                         if (calculateDistance(eachSensorLocation, eachTargetLocation) <= sensorRadius) {
                             table += '<td>1</td>';
@@ -340,38 +258,28 @@ if (isset($_POST['submit_logout'])) {
                 console.log(matrix);
             }
 
-            function fileTest() {
-                jQuery.ajax({
-                    type: "POST",
-                    url: "../generateCoverageR.php",
-                    dataType: "json",
-                    data: {matrix: JSON.stringify(matrix)},
-                    success: function (response) {
+            function send_request() {
+//                console.log("targetsArray.length : " + targetsArray.length);
+
+                if (matrix.length === 0) {
+                    document.getElementById("CoverageRequest").innerHTML = 'No target is selected.';
+                } else {
+                    jQuery.ajax({
+                        type: "POST",
+                        url: "../generateCoverageR.php",
+                        dataType: "json",
+                        data: {matrix: JSON.stringify(matrix), noOfSensors: JSON.stringify(sensorsArray.length), noOfTargets: JSON.stringify(targetsArray.length)},
+                        success: function (response) {
 //                        clearAllSensors();
 
-//                        document.getElementById("output").innerHTML = response.html;
-                        document.getElementById("CoverageRequest").innerHTML = response.html;
-                        document.getElementById("error").innerHTML = 'No error';
-//                        $.each(response.places, function (i, item) {
-//                            if (item.status === 'Online') {
-//                                addMarker('sensor', item.latitude, item.longitude, item.name, "greenball.png");
-//                            } else {
-//                                addMarker('sensor', item.latitude, item.longitude, item.name, "pinkball.png");
-//                            }
-//                        });
-//
-////                        showCoverageR();
-//                        window.scrollTo(0, document.body.scrollHeight);
-                    },
-                    error: function (status, error) {
-                        document.getElementById("error").innerHTML = "status " + status + " , error " + error;
-                    }
-                });
-//                file=fopen('1st.txt',3);
-
-
-//                console.log(file);
-//                fclose(file);
+                            document.getElementById("CoverageRequest").innerHTML = response.html;
+//                        document.getElementById("error").innerHTML = 'No error';
+                        },
+                        error: function (status, error) {
+                            document.getElementById("CoverageRequest").innerHTML = "Error status : " + status + " , error " + error;
+                        }
+                    });
+                }
             }
 
             function getSelectedCheckboxesArray() {
@@ -382,7 +290,7 @@ if (isset($_POST['submit_logout'])) {
                 return ch_list;
             }
 
-            function displayUsers() {
+            function displaySensors() {
                 var check_list = Array();
                 check_list = getSelectedCheckboxesArray();
                 var noOfCheckedItems = check_list.length;
@@ -398,19 +306,18 @@ if (isset($_POST['submit_logout'])) {
 
                             document.getElementById("sensors").innerHTML = response.sensors;
                             document.getElementById("output").innerHTML = response.output;
-                            document.getElementById("exception").innerHTML = response.exception;
-                            document.getElementById("time").innerHTML = "time : " + new Date();
+//                            document.getElementById("exception").innerHTML = response.exception;
+//                            document.getElementById("time").innerHTML = "Time : " + new Date();
                             $.each(response.places, function (i, item) {
+
                                 if (item.status === 'Online') {
-                                    addMarker('sensor', item.latitude, item.longitude, item.name, "../greenball.png");
+                                    addMarker('sensor', item.latitude, item.longitude, item.id + ' =>' + item.name, item.status, "../greenball.png", true);
                                 } else {
-                                    addMarker('sensor', item.latitude, item.longitude, item.name, "../pinkball.png");
+                                    addMarker('sensor', item.latitude, item.longitude, item.id + ' =>' + item.name, item.status, "../pinkball.png", true);
                                 }
                             });
 
-                            showCoverageR();
-                            window.scrollTo(0, document.body.scrollHeight);
-                            document.getElementById("error").innerHTML = 'No error';
+//                            window.scrollTo(0, document.body.scrollHeight);
                             document.getElementById("CoverageRequest").innerHTML = '';
                         },
                         error: function (status, error) {
@@ -420,41 +327,67 @@ if (isset($_POST['submit_logout'])) {
                 }
             }
 
-            displayUsers();
+            displaySensors();
 
-            setInterval("displayUsers()", interval);
-//            showCoverageR();
+            setInterval("displaySensors()", interval);
 
         </script>
     </head>
+
     <body>
         <form action="" method="post" >
             <input type="submit" name="submit_logout" value="logout"/>
         </form>
 
-        <div id='sensors'></div><div id='output'></div><div id='exception'></div><div id='CoverageR' ></div><br/>
-        <div id='time'></div>
+        <div id='sensors'></div>
+        <!--<div id='time'></div>-->
+        <input type="button" onclick="send_request()" value="send request" />
+        <div id='CoverageRequest' ></div>        
+
         <div id='map' onmouseover='(function () {
-                    document.getElementById("mouse").innerHTML = "onmouseenter ";
+                    document.getElementById("mouse").innerHTML = "Mouse status : mouse is in the map ";
                     isMouseOnMap = true;
                 })();' onmouseout='(function () {
-                            document.getElementById("mouse").innerHTML = "onmouseout ";
+                            document.getElementById("mouse").innerHTML = "Mouse status : mouse is not in the map ";
                             isMouseOnMap = false;
                         })();' ></div>
+
+
+        <b style="font-size: 150%;color: red;" >N.B: Refresh rate is '1 second' , to stop refresh place mouse in the map or select any sensor from above list.</b>
         <div id='mouse'></div>
 
         <div id='error' >No error</div>
 
-        <input type="button" onclick="clearAllTargets()" value="clear All Targets" />
-        <input type="button" onclick="showAllTargets()" value="show All Targets" />
-        <input type="button" onclick="showAllSensors()" value="show All Sensors" />
-        <!--<br/>-->
-        <input type="button" onclick="fileTest()" value="file Test" />
+        <div id='output'></div>
+        <form action="../clear_output" method="post" >
+            <input type="submit" name="submit_clear_output" value="clear output"/>
+        </form>
 
-        <div id='CoverageRequest' ></div>
+        <!--<div id='exception'></div>-->
+        <div id='CoverageR' ></div><br/>
+
+        <input type="button" onclick="clearAllTargets()" value="clear All Targets" />
+<!--        <input type="button" onclick="showAllTargets()" value="show All Targets" />
+        <input type="button" onclick="showAllSensors()" value="show All Sensors" />-->
+
+
         <script type="text/javascript">
             showCoverageR();
         </script>
+
+        <div id='test' style="padding-bottom: 5em"></div>
+
+        <address class="bottom" style="
+                 border: 2px solid blue;
+                 margin: 10px;
+                 padding: 5px;
+                 background-color: darkcyan;
+                 position: fixed;
+                 bottom: 10px;
+                 left: 45%">Supriya Baidya <a style="color: cyan" href="mailto:supriyobaidya63@gmail.com"> supriyobaidya63@gmail.com</a> <br/>
+            Copyright &copy; Supriya Baidya 1995-2018 all rights reserved
+        </address>
+
     </body>
 
 </html>

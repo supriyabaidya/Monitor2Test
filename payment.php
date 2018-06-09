@@ -7,7 +7,7 @@ session_start();
  * and open the template in the editor.
  */
 
-include './database.php';
+include './database_sensor_cloud.php';
 
 if (isset($_POST['stripeToken'])) {        //register(insert into db) after payment is done
     mysqli_query($link, "insert into service_users(username,password,name,phone) values('" . $_SESSION['username'] . "','" . $_SESSION['password'] . "','" . $_SESSION['name'] . "','" . $_SESSION['phone'] . "') ;") or die("\'insert\' query execution is failed!! ");
@@ -19,9 +19,9 @@ if (isset($_POST['stripeToken'])) {        //register(insert into db) after paym
     unset($_SESSION['password']);
     unset($_SESSION['phone']);
 
-    $_SESSION['message'] = 'Registration(payment) is succeeded , now login please';     //setting $_SESSION['message']` , which will be shown in `index.php`
+    $_SESSION['message'] = 'Registration(payment) is succeeded , now login please';     //setting $_SESSION['message']` , which will be shown in `final_sem_project.php`
 
-    header('location:index');       //then redirect to `index.php` for log in or register etc
+    header('location:final_sem_project.php');       //then redirect to `final_sem_project.php` for log in or register etc
 }
 ?>
 

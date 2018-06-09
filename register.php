@@ -36,7 +36,7 @@ Phone no.  : <input type="number" name="phone" placeholder="phone no." /></br>
              <input type="submit" name="submit_register" value="register"/>
             </pre>
         </form>
-        Already registered ? <a href="index">login here</a>
+        Already registered ? <a href="final_sem_project.php">login here</a>
     </body>
     <script type="text/javascript">
         var valid = false;

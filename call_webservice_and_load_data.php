@@ -2,13 +2,69 @@
 
 session_start();
 
-//$client = new SoapClient("http://web-service-android-sensor-web-service.1d35.starter-us-east-1.openshiftapps.com/AndroidWebService?wsdl"); // soap webservice call
-$client = new SoapClient("http://localhost:8081/WebserviceTestOpenshift/Test?wsdl"); // (local) soap webservice call
-//$response = $client->getUsers();
-$showOutput = $client->showOutput(array('service_usersUsername' => $_SESSION['username'] . '_1'));
+ini_set("soap.wsdl_cache_enabled", "0");
+
+$client = new SoapClient("http://sensor-target-coverage.ap-south-1.elasticbeanstalk.com/Test?wsdl"); // soap webservice call
+//$client = new SoapClient("http://localhost:8081/WebserviceTestOpenshift/Test?wsdl"); // (local) soap webservice call
+
+$displaySensors = $client->displaySensors();
+$showOutput = $client->showOutput(array('service_usersUsername' => $_SESSION['username']));
 $exception = 'Error: ';
-$output = '<table>
-				<tr><th>Sensor Id</th><th>proximity</th><th>light</th><th>Time</th></tr></br>';
+
+
+$no_of_sensors = $_POST['no_of_sensors'];
+$no_of_targets = $_POST['no_of_targets'];
+
+$sensors = '</br><h3> List of Sensors: </h3>
+            <input type="hidden" name="no_of_sensors" value="' . $no_of_sensors . '" />
+            <input type="hidden" name="no_of_targets" value="' . $no_of_targets . '" />
+			<table>
+				<tr><th>select</th><th>Sensor Id</th><th>username</th><th>latitude</th><th>longitude</th><th>status</th></tr>';
+
+$places = array();
+
+foreach ($displaySensors as $row) {
+//        echo '$row ' . sizeof($row) . '</br>';
+
+    foreach ($row as $object) {
+//            echo '$object ' . sizeof($object) . '</br>';
+
+        if (sizeof($row) === 1 && sizeof($object) === 1) {         // for cacthing error,which is only one string value in 2d array
+            $exception = $exception . ' , 2) ' . $row->item;
+        } elseif (sizeof($row) === 1 && sizeof($object) === 6) {        // if there is only one row in the generated temp_output file
+            $sensors = $sensors . '<tr><td> <input type="checkbox" name="selected[]" value= "' . $object [0] . '"/></td><td>' . $object [1] . '</td><td>' . $object [2] . '</td><td>' . $object [3] . '</td><td>' . $object [4] . '</td><td>' . $object [5] . '</td>';
+
+            $places [] = array(
+                'latitude' => $object [3],
+                'longitude' => $object [4],
+                'name' => $object [2],
+                'id' => $object [1],
+                'status' => $object [5]
+            );
+        } else {
+            foreach ($object as $value) {
+//                echo '$value ' . sizeof($value) . '</br>';
+
+                $sensors = $sensors . '<tr><td> <input type="checkbox" name="selected[]" value= "' . $value [0] . '"/></td><td>' . $value [1] . '</td><td>' . $value [2] . '</td><td>' . $value [3] . '</td><td>' . $value [4] . '</td><td>' . $value [5] . '</td>';
+
+                $places [] = array(
+                    'latitude' => $value [3],
+                    'longitude' => $value [4],
+                    'name' => $value [2],
+                    'id' => $value [1],
+                    'status' => $value [5]
+                );
+            }
+        }
+    }
+}
+
+
+$sensors = $sensors . '</table>';
+
+$output = ' </br><h3> Output: </h3>
+            <table>
+                <tr><th>Sensor Id</th><th>proximity</th><th>light</th><th>Time</th></tr>';
 
 foreach ($showOutput as $row) {
 //        echo '$row ' . sizeof($row) . '</br>';
@@ -17,66 +73,25 @@ foreach ($showOutput as $row) {
 //            echo '$object ' . sizeof($object) . '</br>';
 
         if (sizeof($row) === 1 && sizeof($object) === 1) {         // for cacthing error,which is only one string value in 2d array
-            $exception = $exception . $row->item;
+            $exception = $exception . '1) ' . $row->item;
         } elseif (sizeof($row) === 1 && sizeof($object) === 4) {        // if there is only one row in the generated temp_output file
-            $output = $output . '<tr><th>' . $object[0] . '</th><th>' . $object[1] . '</th><th>' . $object[2] . '</th><th>' . $object[3] . '</th></tr></br>';
+            $output = $output . '<tr><td>' . $object[0] . '</td><td>' . $object[1] . '</td><td>' . $object[2] . '</td><td>' . $object[3] . '</td></tr>';
         } else {
             foreach ($object as $value) {
 //                    echo '$value ' . sizeof($value) . '</br>';
 
-                $output = $output . '<tr><th>' . $value[0] . '</th><th>' . $value[1] . '</th><th>' . $value[2] . '</th><th>' . $value[3] . '</th></tr></br>';
+                $output = $output . '<tr><td>' . $value[0] . '</td><td>' . $value[1] . '</td><td>' . $value[2] . '</th><td>' . $value[3] . '</td></tr>';
             }
         }
     }
 }
-//foreach ($showOutput as $object) {
-//    foreach ($object as $row) {
-//        foreach ($row as $value) {
-//            $output = $output . '<tr><th>' . $value[0] . '</th><th>' . $value[1] . '</th><th>' . $value[2] . '</th><th>' . $value[3] . '</th></tr></br>';
-//        }
-//    }
-//}
+
 $output = $output . '</table></br>';
 
-$no_of_sensors = $_POST['no_of_sensors'];
-$no_of_targets = $_POST['no_of_targets'];
-
-$sensors = '<div class="dataset"></br>
-		<h1 class="title"> List of Users </h1></br>
-			<form action="../sendNotification.php" method="POST"></br>
-                <input type="hidden" name="no_of_sensors" value="' . $no_of_sensors . '" /></br>
-                <input type="hidden" name="no_of_targets" value="' . $no_of_targets . '" /></br>
-				<table>
-					<tr><th>select</th><th>username</th><th>longitude</th><th>latitude</th><th>status</th><th>proximity</th><th>light</th></tr></br>';
-
-$places = array();
-//foreach ($response as $object) {
-//    $size = sizeof($object);
-//
-//    for ($i = 0; $i < $size; $i ++) {
-//        foreach ($object [$i] as $rows) {
-//            $sensors = $sensors . '<tr><td> <input type="checkbox" name="selected[]" value= "' . $rows [0] . '"/></td><td>' . $rows [1] . '</td><td>' . $rows [2] . '</td><td>' . $rows [3] . '</td><td>' . $rows [4] . '</td><td>' . $rows [5] . '</td><td>' . $rows [6] . '</td></tr></br>';
-//
-//            $places [] = array(
-//                'latitude' => $rows [3],
-//                'longitude' => $rows [2],
-//                'name' => $rows [1],
-//                'status' => $rows [4]
-//            );
-//        }
-//    }
-//}
-
-$sensors = $sensors . '</table></br>
-				<input type="submit" name="send_request" value="send request" /></br>
-			</form></br>
-		</div></br>';
-
-// Handle Success Message
+// Handle Success Message and sending requested data
 echo json_encode(array(
     'sensors' => $sensors,
     'places' => $places,
     'output' => $output,
     'exception' => $exception
 ));
-?>
