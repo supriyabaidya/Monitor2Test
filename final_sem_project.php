@@ -3,7 +3,7 @@ session_start();
 
 //header('location:test');
 
-include './database_sensor_cloud.php';
+include 'database.php';
 
 if (isset($_POST['submit_login'])) {    // when user logged in
     $username = $_POST['username'];

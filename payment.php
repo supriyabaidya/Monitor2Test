@@ -7,7 +7,7 @@ session_start();
  * and open the template in the editor.
  */
 
-include './database_sensor_cloud.php';
+include 'database.php';
 
 if (isset($_POST['stripeToken'])) {        //register(insert into db) after payment is done
     mysqli_query($link, "insert into service_users(username,password,name,phone) values('" . $_SESSION['username'] . "','" . $_SESSION['password'] . "','" . $_SESSION['name'] . "','" . $_SESSION['phone'] . "') ;") or die("\'insert\' query execution is failed!! ");
